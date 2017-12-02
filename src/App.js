@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
+import marked from 'marked';
 import logo from './logo.svg';
 import './App.css';
 
@@ -151,13 +152,16 @@ class LoadFile extends Component {
         })
     };
 
+    getMarkdownText(text) {
+        var rawMarkup = marked(text, {sanitize: true});
+        return { __html: rawMarkup };
+    }
+
     render() {
         return (
             <div>
                 {this.state.text ? (
-                    this.state.text.split("\n").map((item, key) => {
-                        return <pre key={key}>{item}<br/></pre>;
-                    })
+                    <div dangerouslySetInnerHTML={this.getMarkdownText(this.state.text)} />
                 ) : (
                     <Loading/>
                 )}
